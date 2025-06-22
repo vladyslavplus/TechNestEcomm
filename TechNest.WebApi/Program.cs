@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using TechNest.Persistence;
 using TechNest.Persistence.Data;
 using TechNest.Persistence.Data.Seeding;
 using TechNest.Persistence.Identity;
+using TechNest.WebApi;
 using TechNest.WebApi.Middlewares;
-using TechNest.WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,8 @@ builder.Host.SerilogConfiguration();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddPersistenceServices();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
     {
