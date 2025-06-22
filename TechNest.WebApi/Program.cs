@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TechNest.Persistence.Data;
 using TechNest.Persistence.Data.Seeding;
 using TechNest.Persistence.Identity;
+using TechNest.WebApi.Middlewares;
 using TechNest.WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -49,6 +50,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
 app.MapControllers();
 
