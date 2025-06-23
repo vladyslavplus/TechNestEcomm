@@ -15,6 +15,10 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(o => o.Phone).IsRequired().HasMaxLength(50);
         builder.Property(o => o.City).IsRequired().HasMaxLength(100);
         builder.Property(o => o.Department).IsRequired().HasMaxLength(150);
+        builder.Property(o => o.Status)
+            .HasConversion<string>()
+            .IsRequired()
+            .HasMaxLength(50);
         builder.Property(o => o.CreatedAt).IsRequired();
 
         builder.HasMany(o => o.Items)

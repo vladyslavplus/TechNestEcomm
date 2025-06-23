@@ -11,6 +11,7 @@ public class Order
     public string Phone { get; set; } = null!;
     public string City { get; set; } = null!;
     public string Department { get; set; } = null!;
+    public OrderStatus Status { get; set; } = OrderStatus.Pending;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();
 }
