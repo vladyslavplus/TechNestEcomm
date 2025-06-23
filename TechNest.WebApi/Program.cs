@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using TechNest.Persistence;
 using TechNest.Persistence.Data;
 using TechNest.Persistence.Data.Seeding;
+using TechNest.Persistence.Extensions;
 using TechNest.Persistence.Identity;
 using TechNest.WebApi;
 using TechNest.WebApi.Middlewares;
