@@ -26,6 +26,7 @@ public class FavoriteProductRepository(ApplicationDbContext context) : GenericRe
 
         return await query
             .Include(f => f.Product)
+            .ThenInclude(p => p.Category)
             .AsNoTracking()
             .ToPagedListAsync(parameters.PageNumber, parameters.PageSize, cancellationToken);
     }

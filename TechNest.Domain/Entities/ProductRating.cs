@@ -8,7 +8,7 @@ public class ProductRating
     public Product Product { get; set; } = null!;
 
     public Guid UserId { get; set; }
-
+    public User User { get; set; } = null!;
     public int Value { get; set; } 
     public DateTime RatedAt { get; set; } = DateTime.UtcNow;
 }

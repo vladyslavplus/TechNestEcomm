@@ -47,6 +47,7 @@ public class ProductRepository(ApplicationDbContext context) : GenericRepository
             .Include(p => p.Attributes)
             .Include(p => p.Ratings)
             .Include(p => p.Comments)
+            .Include(p => p.Favorites)
             .AsNoTracking()
             .ToPagedListAsync(parameters.PageNumber, parameters.PageSize, cancellationToken);
     }

@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using TechNest.Application.Extensions;
 using TechNest.Persistence.Data;
 using TechNest.Persistence.Data.Seeding;
 using TechNest.Persistence.Extensions;
 using TechNest.Persistence.Identity;
-using TechNest.WebApi;
+using TechNest.WebApi.Extensions;
 using TechNest.WebApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddPersistenceServices();
+builder.Services.AddApplicationServices();
+builder.Services.AddWebApiServices();
+
+MapsterConfiguration.RegisterMapsterMappings();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
     {

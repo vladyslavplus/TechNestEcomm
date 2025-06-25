@@ -32,6 +32,7 @@ public class ProductRatingRepository(ApplicationDbContext context) : GenericRepo
 
         return await query
             .Include(r => r.Product)
+            .Include(r => r.User)
             .AsNoTracking()
             .ToPagedListAsync(parameters.PageNumber, parameters.PageSize, cancellationToken);
     }

@@ -1,9 +1,9 @@
 ﻿using Serilog;
 using Serilog.Formatting.Json;
 
-namespace TechNest.WebApi;
+namespace TechNest.WebApi.Extensions;
 
-public static class Extensions
+public static class SerilogExtensions
 {
     public static void SerilogConfiguration(this IHostBuilder host)
     {

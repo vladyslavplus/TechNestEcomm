@@ -18,5 +18,10 @@ public class ProductRatingConfiguration : IEntityTypeConfiguration<ProductRating
             .WithMany(p => p.Ratings)
             .HasForeignKey(r => r.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.HasOne(r => r.User) 
+            .WithMany()
+            .HasForeignKey(r => r.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

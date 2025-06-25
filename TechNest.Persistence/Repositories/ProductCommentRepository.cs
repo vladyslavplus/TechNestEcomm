@@ -29,6 +29,7 @@ public class ProductCommentRepository(ApplicationDbContext context) : GenericRep
 
         return await query
             .Include(pc => pc.Product)
+            .Include(pc => pc.User)
             .AsNoTracking()
             .ToPagedListAsync(parameters.PageNumber, parameters.PageSize, cancellationToken);
     }
