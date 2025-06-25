@@ -19,7 +19,7 @@ public class CartItemService(IUnitOfWork unitOfWork, ISortHelper<CartItem> sortH
 
     public async Task<CartItemDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var item = await unitOfWork.CartItems.GetByIdAsync(id, cancellationToken);
+        var item = await unitOfWork.CartItems.GetByIdWithProductAsync(id, cancellationToken);
         return item?.Adapt<CartItemDto>();
     }
 
@@ -28,25 +28,28 @@ public class CartItemService(IUnitOfWork unitOfWork, ISortHelper<CartItem> sortH
         var entity = dto.Adapt<CartItem>();
         await unitOfWork.CartItems.AddAsync(entity, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        return entity.Adapt<CartItemDto>();
+
+        var createdWithProduct = await unitOfWork.CartItems.GetByIdWithProductAsync(entity.Id, cancellationToken);
+        return createdWithProduct!.Adapt<CartItemDto>();
     }
 
     public async Task<CartItemDto> UpdateAsync(UpdateCartItemDto dto, CancellationToken cancellationToken)
     {
         var item = await unitOfWork.CartItems.GetByIdAsync(dto.Id, cancellationToken);
-        if (item is null) throw new Exception("Cart item not found");
+        if (item is null) throw new KeyNotFoundException("Cart item not found");
 
         item.Quantity = dto.Quantity;
         unitOfWork.CartItems.Update(item);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return item.Adapt<CartItemDto>();
+        var updatedWithProduct = await unitOfWork.CartItems.GetByIdWithProductAsync(item.Id, cancellationToken);
+        return updatedWithProduct!.Adapt<CartItemDto>();
     }
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
         var item = await unitOfWork.CartItems.GetByIdAsync(id, cancellationToken);
-        if (item is null) throw new Exception("Cart item not found");
+        if (item is null) throw new KeyNotFoundException("Cart item not found");
 
         unitOfWork.CartItems.Delete(item);
         await unitOfWork.SaveChangesAsync(cancellationToken);

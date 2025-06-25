@@ -29,4 +29,13 @@ public class CartItemRepository(ApplicationDbContext context) : GenericRepositor
             .AsNoTracking()
             .ToPagedListAsync(parameters.PageNumber, parameters.PageSize, cancellationToken);
     }
+    
+    public async Task<CartItem?> GetByIdWithProductAsync(Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        return await _dbSet
+            .Include(ci => ci.Product)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(ci => ci.Id == id, cancellationToken);
+    }
 }

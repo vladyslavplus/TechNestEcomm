@@ -8,19 +8,23 @@ public class SortHelper<T> : ISortHelper<T>
 {
     public IQueryable<T> ApplySort(IQueryable<T> entities, string? orderByQueryString)
     {
+        var propertyInfos = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
         if (string.IsNullOrWhiteSpace(orderByQueryString))
-            return entities;
+        {
+            var idProp = propertyInfos.FirstOrDefault(p =>
+                p.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase));
+
+            return idProp != null ? entities.OrderBy("Id") : entities;
+        }
 
         var orderParams = orderByQueryString.Trim().Split(',');
-        var propertyInfos = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
         var orderQuery = string.Join(",", orderParams.Select(param =>
         {
             var trimmedParam = param.Trim();
-            var orderDescending = trimmedParam.EndsWith(" desc");
-            var propertyName = orderDescending
-                ? trimmedParam[..^5].Trim()
-                : trimmedParam;
+            var orderDescending = trimmedParam.EndsWith(" desc", StringComparison.InvariantCultureIgnoreCase);
+            var propertyName = orderDescending ? trimmedParam[..^5].Trim() : trimmedParam;
 
             var property = propertyInfos.FirstOrDefault(pi =>
                 pi.Name.Equals(propertyName, StringComparison.InvariantCultureIgnoreCase));
@@ -31,7 +35,7 @@ public class SortHelper<T> : ISortHelper<T>
         }).Where(x => x != null));
 
         return string.IsNullOrWhiteSpace(orderQuery)
-            ? entities
+            ? entities.OrderBy("Id") 
             : entities.OrderBy(orderQuery);
     }
 }

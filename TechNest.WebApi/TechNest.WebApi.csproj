@@ -26,10 +26,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\TechNest.Application\TechNest.Application.csproj" />
       <ProjectReference Include="..\TechNest.Persistence\TechNest.Persistence.csproj" />
     </ItemGroup>

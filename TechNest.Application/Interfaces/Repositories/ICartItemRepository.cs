@@ -8,4 +8,5 @@ namespace TechNest.Application.Interfaces.Repositories;
 public interface ICartItemRepository : IGenericRepository<CartItem>
 {
     Task<PagedList<CartItem>> GetAllPaginatedAsync(CartItemQueryParameters parameters, ISortHelper<CartItem> sortHelper, CancellationToken cancellationToken = default);
+    Task<CartItem?> GetByIdWithProductAsync(Guid id, CancellationToken cancellationToken = default);
 }

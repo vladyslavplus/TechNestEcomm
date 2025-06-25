@@ -2,6 +2,7 @@
 **/bin/
 **/obj/
 **/out/
+TechNest.WebApi/Logs/
 project.lock.json
 project.fragment.lock.json
 artifacts/
