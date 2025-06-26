@@ -23,7 +23,7 @@ public class FavoriteProductService(IUnitOfWork unitOfWork, ISortHelper<Favorite
             f => f.UserId == dto.UserId && f.ProductId == dto.ProductId, cancellationToken)).Any();
 
         if (exists)
-            throw new Exception("This product is already in favorites.");
+            throw new InvalidOperationException("This product is already in favorites.");
 
         var entity = dto.Adapt<FavoriteProduct>();
         await unitOfWork.FavoriteProducts.AddAsync(entity, cancellationToken);
@@ -37,7 +37,7 @@ public class FavoriteProductService(IUnitOfWork unitOfWork, ISortHelper<Favorite
             f => f.UserId == userId && f.ProductId == productId, cancellationToken)).FirstOrDefault();
 
         if (entity is null)
-            throw new Exception("Favorite product not found");
+            throw new KeyNotFoundException("Favorite product not found");
 
         unitOfWork.FavoriteProducts.Delete(entity);
         await unitOfWork.SaveChangesAsync(cancellationToken);

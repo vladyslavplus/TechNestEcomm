@@ -34,7 +34,7 @@ public class ProductCommentService(IUnitOfWork unitOfWork, ISortHelper<ProductCo
     public async Task<ProductCommentDto> UpdateAsync(UpdateProductCommentDto dto, CancellationToken cancellationToken)
     {
         var comment = await unitOfWork.ProductComments.GetByIdAsync(dto.Id, cancellationToken);
-        if (comment is null) throw new Exception("Product comment not found");
+        if (comment is null) throw new KeyNotFoundException("Product comment not found");
 
         dto.Adapt(comment);
         unitOfWork.ProductComments.Update(comment);
@@ -46,7 +46,7 @@ public class ProductCommentService(IUnitOfWork unitOfWork, ISortHelper<ProductCo
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
         var comment = await unitOfWork.ProductComments.GetByIdAsync(id, cancellationToken);
-        if (comment is null) throw new Exception("Product comment not found");
+        if (comment is null) throw new KeyNotFoundException("Product comment not found");
 
         unitOfWork.ProductComments.Delete(comment);
         await unitOfWork.SaveChangesAsync(cancellationToken);

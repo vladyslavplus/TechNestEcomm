@@ -34,7 +34,7 @@ public class OrderService(IUnitOfWork unitOfWork, ISortHelper<Order> sortHelper)
     public async Task<OrderDto> UpdateAsync(UpdateOrderDto dto, CancellationToken cancellationToken)
     {
         var order = await unitOfWork.Orders.GetByIdAsync(dto.Id, cancellationToken);
-        if (order is null) throw new Exception("Order not found");
+        if (order is null) throw new KeyNotFoundException("Order not found");
 
         order.Status = dto.Status;
         unitOfWork.Orders.Update(order);
@@ -46,7 +46,7 @@ public class OrderService(IUnitOfWork unitOfWork, ISortHelper<Order> sortHelper)
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
         var order = await unitOfWork.Orders.GetByIdAsync(id, cancellationToken);
-        if (order is null) throw new Exception("Order not found");
+        if (order is null) throw new KeyNotFoundException("Order not found");
 
         unitOfWork.Orders.Delete(order);
         await unitOfWork.SaveChangesAsync(cancellationToken);

@@ -34,7 +34,7 @@ public class ProductRatingService(IUnitOfWork unitOfWork, ISortHelper<ProductRat
     public async Task<ProductRatingDto> UpdateAsync(UpdateProductRatingDto dto, CancellationToken cancellationToken)
     {
         var rating = await unitOfWork.ProductRatings.GetByIdAsync(dto.Id, cancellationToken);
-        if (rating is null) throw new Exception("Product rating not found");
+        if (rating is null) throw new KeyNotFoundException("Product rating not found");
 
         dto.Adapt(rating);
         unitOfWork.ProductRatings.Update(rating);
@@ -46,7 +46,7 @@ public class ProductRatingService(IUnitOfWork unitOfWork, ISortHelper<ProductRat
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
         var rating = await unitOfWork.ProductRatings.GetByIdAsync(id, cancellationToken);
-        if (rating is null) throw new Exception("Product rating not found");
+        if (rating is null) throw new KeyNotFoundException("Product rating not found");
 
         unitOfWork.ProductRatings.Delete(rating);
         await unitOfWork.SaveChangesAsync(cancellationToken);

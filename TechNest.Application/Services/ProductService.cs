@@ -34,7 +34,7 @@ public class ProductService(IUnitOfWork unitOfWork, ISortHelper<Product> sortHel
     public async Task<ProductDto> UpdateAsync(UpdateProductDto dto, CancellationToken cancellationToken)
     {
         var product = await unitOfWork.Products.GetByIdAsync(dto.Id, cancellationToken);
-        if (product is null) throw new Exception("Product not found");
+        if (product is null) throw new KeyNotFoundException("Product not found");
 
         dto.Adapt(product);
         unitOfWork.Products.Update(product);
@@ -46,7 +46,7 @@ public class ProductService(IUnitOfWork unitOfWork, ISortHelper<Product> sortHel
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
         var product = await unitOfWork.Products.GetByIdAsync(id, cancellationToken);
-        if (product is null) throw new Exception("Product not found");
+        if (product is null) throw new KeyNotFoundException("Product not found");
 
         unitOfWork.Products.Delete(product);
         await unitOfWork.SaveChangesAsync(cancellationToken);

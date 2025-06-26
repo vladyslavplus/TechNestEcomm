@@ -34,7 +34,7 @@ public class ProductAttributeService(IUnitOfWork unitOfWork, ISortHelper<Product
     public async Task<ProductAttributeDto> UpdateAsync(UpdateProductAttributeDto dto, CancellationToken cancellationToken)
     {
         var attribute = await unitOfWork.ProductAttributes.GetByIdAsync(dto.Id, cancellationToken);
-        if (attribute is null) throw new Exception("Product attribute not found");
+        if (attribute is null) throw new KeyNotFoundException("Product attribute not found");
 
         dto.Adapt(attribute);
         unitOfWork.ProductAttributes.Update(attribute);
@@ -46,7 +46,7 @@ public class ProductAttributeService(IUnitOfWork unitOfWork, ISortHelper<Product
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
         var attribute = await unitOfWork.ProductAttributes.GetByIdAsync(id, cancellationToken);
-        if (attribute is null) throw new Exception("Product attribute not found");
+        if (attribute is null) throw new KeyNotFoundException("Product attribute not found");
 
         unitOfWork.ProductAttributes.Delete(attribute);
         await unitOfWork.SaveChangesAsync(cancellationToken);

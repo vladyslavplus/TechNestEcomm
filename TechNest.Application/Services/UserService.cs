@@ -34,7 +34,7 @@ public class UserService(IUnitOfWork unitOfWork, ISortHelper<User> sortHelper) :
     public async Task<UserDto> UpdateAsync(UpdateUserDto dto, CancellationToken cancellationToken)
     {
         var user = await unitOfWork.Users.GetByIdAsync(dto.Id, cancellationToken);
-        if (user is null) throw new Exception("User not found");
+        if (user is null) throw new KeyNotFoundException("User not found");
 
         dto.Adapt(user);
         unitOfWork.Users.Update(user);
@@ -46,7 +46,7 @@ public class UserService(IUnitOfWork unitOfWork, ISortHelper<User> sortHelper) :
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
         var user = await unitOfWork.Users.GetByIdAsync(id, cancellationToken);
-        if (user is null) throw new Exception("User not found");
+        if (user is null) throw new KeyNotFoundException("User not found");
 
         unitOfWork.Users.Delete(user);
         await unitOfWork.SaveChangesAsync(cancellationToken);
