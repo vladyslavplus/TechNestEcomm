@@ -12,6 +12,11 @@ public class SortHelper<T> : ISortHelper<T>
 
         if (string.IsNullOrWhiteSpace(orderByQueryString))
         {
+            if (typeof(T) == typeof(TechNest.Domain.Entities.FavoriteProduct))
+            {
+                return entities.OrderBy("UserId").ThenBy("ProductId");
+            }
+            
             var idProp = propertyInfos.FirstOrDefault(p =>
                 p.Name.Equals("Id", StringComparison.InvariantCultureIgnoreCase));
 

@@ -16,25 +16,31 @@ public class FavoriteProductService(IUnitOfWork unitOfWork, ISortHelper<Favorite
         var favorites = await unitOfWork.FavoriteProducts.GetAllPaginatedAsync(parameters, sortHelper, cancellationToken);
         return favorites.Adapt<PagedList<FavoriteProductDto>>();
     }
+    
+    public async Task<FavoriteProductDto?> GetByUserIdAndProductIdAsync(Guid userId, Guid productId, CancellationToken cancellationToken)
+    {
+        var entity = await unitOfWork.FavoriteProducts.GetByUserIdAndProductIdAsync(userId, productId, cancellationToken);
+        return entity?.Adapt<FavoriteProductDto>();
+    }
 
     public async Task<FavoriteProductDto> CreateAsync(CreateFavoriteProductDto dto, CancellationToken cancellationToken)
     {
-        var exists = (await unitOfWork.FavoriteProducts.FindAsync(
-            f => f.UserId == dto.UserId && f.ProductId == dto.ProductId, cancellationToken)).Any();
+        var exists = await unitOfWork.FavoriteProducts.GetByUserIdAndProductIdAsync(dto.UserId, dto.ProductId, cancellationToken);
 
-        if (exists)
+        if (exists != null)
             throw new InvalidOperationException("This product is already in favorites.");
 
         var entity = dto.Adapt<FavoriteProduct>();
         await unitOfWork.FavoriteProducts.AddAsync(entity, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        return entity.Adapt<FavoriteProductDto>();
+
+        var created = await unitOfWork.FavoriteProducts.GetByUserIdAndProductIdAsync(dto.UserId, dto.ProductId, cancellationToken);
+        return created!.Adapt<FavoriteProductDto>();
     }
 
     public async Task DeleteAsync(Guid userId, Guid productId, CancellationToken cancellationToken)
     {
-        var entity = (await unitOfWork.FavoriteProducts.FindAsync(
-            f => f.UserId == userId && f.ProductId == productId, cancellationToken)).FirstOrDefault();
+        var entity = await unitOfWork.FavoriteProducts.GetByUserIdAndProductIdAsync(userId, productId, cancellationToken);
 
         if (entity is null)
             throw new KeyNotFoundException("Favorite product not found");

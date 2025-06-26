@@ -30,4 +30,13 @@ public class FavoriteProductRepository(ApplicationDbContext context) : GenericRe
             .AsNoTracking()
             .ToPagedListAsync(parameters.PageNumber, parameters.PageSize, cancellationToken);
     }
+    
+    public async Task<FavoriteProduct?> GetByUserIdAndProductIdAsync(Guid userId, Guid productId, CancellationToken cancellationToken = default)
+    {
+        return await _dbSet
+            .Include(f => f.Product)
+            .ThenInclude(p => p.Category)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(f => f.UserId == userId && f.ProductId == productId, cancellationToken);
+    }
 }

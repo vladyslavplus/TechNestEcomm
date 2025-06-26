@@ -7,6 +7,7 @@ namespace TechNest.Application.Interfaces.Services;
 public interface IFavoriteProductService
 {
     Task<PagedList<FavoriteProductDto>> GetAllAsync(FavoriteProductQueryParameters parameters, CancellationToken cancellationToken);
+    Task<FavoriteProductDto?> GetByUserIdAndProductIdAsync(Guid userId, Guid productId, CancellationToken cancellationToken);
     Task<FavoriteProductDto> CreateAsync(CreateFavoriteProductDto dto, CancellationToken cancellationToken);
     Task DeleteAsync(Guid userId, Guid productId, CancellationToken cancellationToken);
 }
