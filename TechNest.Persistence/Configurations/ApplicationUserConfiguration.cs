@@ -29,7 +29,7 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
 
         builder.HasMany(u => u.Ratings)
             .WithOne()
-            .HasForeignKey(r => r.UserId)
+            .HasForeignKey(r => r.UserId)   
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(u => u.Comments)

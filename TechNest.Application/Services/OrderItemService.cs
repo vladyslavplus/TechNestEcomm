@@ -19,7 +19,7 @@ public class OrderItemService(IUnitOfWork unitOfWork, ISortHelper<OrderItem> sor
 
     public async Task<OrderItemDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var item = await unitOfWork.OrderItems.GetByIdAsync(id, cancellationToken);
+        var item = await unitOfWork.OrderItems.GetByIdWithDetailsAsync(id, cancellationToken);
         return item?.Adapt<OrderItemDto>();
     }
 
@@ -28,7 +28,9 @@ public class OrderItemService(IUnitOfWork unitOfWork, ISortHelper<OrderItem> sor
         var entity = dto.Adapt<OrderItem>();
         await unitOfWork.OrderItems.AddAsync(entity, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        return entity.Adapt<OrderItemDto>();
+
+        var created = await unitOfWork.OrderItems.GetByIdWithDetailsAsync(entity.Id, cancellationToken);
+        return created!.Adapt<OrderItemDto>();
     }
 
     public async Task<OrderItemDto> UpdateAsync(UpdateOrderItemDto dto, CancellationToken cancellationToken)
@@ -40,7 +42,8 @@ public class OrderItemService(IUnitOfWork unitOfWork, ISortHelper<OrderItem> sor
         unitOfWork.OrderItems.Update(item);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return item.Adapt<OrderItemDto>();
+        var updated = await unitOfWork.OrderItems.GetByIdWithDetailsAsync(dto.Id, cancellationToken);
+        return updated!.Adapt<OrderItemDto>();
     }
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)

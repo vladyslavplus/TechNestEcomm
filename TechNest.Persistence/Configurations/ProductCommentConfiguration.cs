@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TechNest.Domain.Entities;
+using TechNest.Persistence.Identity;
 
 namespace TechNest.Persistence.Configurations;
 
@@ -18,5 +19,12 @@ public class ProductCommentConfiguration : IEntityTypeConfiguration<ProductComme
             .WithMany(p => p.Comments)
             .HasForeignKey(c => c.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.HasOne<ApplicationUser>()
+            .WithMany(u => u.Comments)
+            .HasForeignKey(c => c.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        builder.Ignore(c => c.User);
     }
 }

@@ -42,4 +42,13 @@ public class OrderItemRepository(ApplicationDbContext context) : GenericReposito
             .AsNoTracking()
             .ToPagedListAsync(parameters.PageNumber, parameters.PageSize, cancellationToken);
     }
+    
+    public async Task<OrderItem?> GetByIdWithDetailsAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await _dbSet
+            .Include(oi => oi.Product)
+            .Include(oi => oi.Order)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(oi => oi.Id == id, cancellationToken);
+    }
 }

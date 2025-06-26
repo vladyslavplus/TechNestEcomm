@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TechNest.Domain.Entities;
+using TechNest.Persistence.Identity;
 
 namespace TechNest.Persistence.Configurations;
 
@@ -19,9 +20,11 @@ public class ProductRatingConfiguration : IEntityTypeConfiguration<ProductRating
             .HasForeignKey(r => r.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
         
-        builder.HasOne(r => r.User) 
-            .WithMany()
+        builder.HasOne<ApplicationUser>()
+            .WithMany(u => u.Ratings)
             .HasForeignKey(r => r.UserId)
             .OnDelete(DeleteBehavior.Restrict);
+        
+        builder.Ignore(r => r.User);
     }
 }
