@@ -34,7 +34,7 @@ public class CategoryService(IUnitOfWork unitOfWork, ISortHelper<Category> sortH
     public async Task<CategoryDto> UpdateAsync(UpdateCategoryDto dto, CancellationToken cancellationToken)
     {
         var category = await unitOfWork.Categories.GetByIdAsync(dto.Id, cancellationToken);
-        if (category is null) throw new Exception("Category not found");
+        if (category is null) throw new KeyNotFoundException("Category not found");
 
         dto.Adapt(category);
         unitOfWork.Categories.Update(category);
@@ -46,7 +46,7 @@ public class CategoryService(IUnitOfWork unitOfWork, ISortHelper<Category> sortH
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
         var category = await unitOfWork.Categories.GetByIdAsync(id, cancellationToken);
-        if (category is null) throw new Exception("Category not found");
+        if (category is null) throw new KeyNotFoundException("Category not found");
 
         unitOfWork.Categories.Delete(category);
         await unitOfWork.SaveChangesAsync(cancellationToken);

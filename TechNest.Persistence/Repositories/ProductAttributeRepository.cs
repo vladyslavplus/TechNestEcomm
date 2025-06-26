@@ -20,10 +20,10 @@ public class ProductAttributeRepository(ApplicationDbContext context) : GenericR
             query = query.Where(pa => pa.ProductId == parameters.ProductId.Value);
 
         if (!string.IsNullOrWhiteSpace(parameters.Key))
-            query = query.Where(pa => pa.Key.Contains(parameters.Key, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(pa => pa.Key.ToLower().Contains(parameters.Key.ToLower()));
 
         if (!string.IsNullOrWhiteSpace(parameters.Value))
-            query = query.Where(pa => pa.Value.Contains(parameters.Value, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(pa => pa.Value.ToLower().Contains(parameters.Value.ToLower()));
 
         query = sortHelper.ApplySort(query, parameters.OrderBy);
 

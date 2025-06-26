@@ -17,13 +17,13 @@ public class ProductRepository(ApplicationDbContext context) : GenericRepository
         var query = _dbSet.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(parameters.Name))
-            query = query.Where(p => p.Name.Contains(parameters.Name, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(p => p.Name.ToLower().Contains(parameters.Name.ToLower()));
 
         if (!string.IsNullOrWhiteSpace(parameters.Brand))
-            query = query.Where(p => p.Brand.Contains(parameters.Brand, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(p => p.Brand.ToLower().Contains(parameters.Brand.ToLower()));
 
         if (!string.IsNullOrWhiteSpace(parameters.Description))
-            query = query.Where(p => p.Description.Contains(parameters.Description, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(p => p.Description.ToLower().Contains(parameters.Description.ToLower()));
 
         if (parameters.CategoryId.HasValue)
             query = query.Where(p => p.CategoryId == parameters.CategoryId.Value);

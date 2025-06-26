@@ -17,7 +17,7 @@ public class CategoryRepository(ApplicationDbContext context) : GenericRepositor
         var query = _dbSet.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(parameters.Name))
-            query = query.Where(c => c.Name.Contains(parameters.Name, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(c => c.Name.ToLower().Contains(parameters.Name.ToLower()));
 
         query = sortHelper.ApplySort(query, parameters.OrderBy);
 

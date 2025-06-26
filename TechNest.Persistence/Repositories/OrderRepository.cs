@@ -19,20 +19,21 @@ public class OrderRepository(ApplicationDbContext context) : GenericRepository<O
         if (parameters.UserId.HasValue)
             query = query.Where(o => o.UserId == parameters.UserId);
 
+        
         if (!string.IsNullOrWhiteSpace(parameters.FullName))
-            query = query.Where(o => o.FullName.Contains(parameters.FullName, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(o => o.FullName.ToLower().Contains(parameters.FullName.ToLower()));
 
         if (!string.IsNullOrWhiteSpace(parameters.City))
-            query = query.Where(o => o.City.Contains(parameters.City, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(o => o.City.ToLower().Contains(parameters.City.ToLower()));
 
         if (!string.IsNullOrWhiteSpace(parameters.Email))
-            query = query.Where(o => o.Email.Contains(parameters.Email, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(o => o.Email.ToLower().Contains(parameters.Email.ToLower()));
 
         if (!string.IsNullOrWhiteSpace(parameters.Phone))
-            query = query.Where(o => o.Phone.Contains(parameters.Phone, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(o => o.Phone.ToLower().Contains(parameters.Phone.ToLower()));
 
         if (!string.IsNullOrWhiteSpace(parameters.Department))
-            query = query.Where(o => o.Department.Contains(parameters.Department, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(o => o.Department.ToLower().Contains(parameters.Department.ToLower()));
 
         if (parameters.Status.HasValue)
             query = query.Where(o => o.Status == parameters.Status.Value);

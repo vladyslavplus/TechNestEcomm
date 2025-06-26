@@ -17,13 +17,13 @@ public class UserRepository(ApplicationDbContext context) : GenericRepository<Us
         var query = _dbSet.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(parameters.FullName))
-            query = query.Where(u => u.FullName.Contains(parameters.FullName, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(u => u.FullName.ToLower().Contains(parameters.FullName.ToLower()));
 
         if (!string.IsNullOrWhiteSpace(parameters.City))
-            query = query.Where(u => u.City != null && u.City.Contains(parameters.City, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(u => u.City != null && u.City.ToLower().Contains(parameters.City.ToLower()));
 
         if (!string.IsNullOrWhiteSpace(parameters.Email))
-            query = query.Where(u => u.Email.Contains(parameters.Email, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(u => u.Email.ToLower().Contains(parameters.Email.ToLower()));
 
         query = sortHelper.ApplySort(query, parameters.OrderBy);
 

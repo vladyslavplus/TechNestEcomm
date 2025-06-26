@@ -23,7 +23,7 @@ public class ProductCommentRepository(ApplicationDbContext context) : GenericRep
             query = query.Where(pc => pc.UserId == parameters.UserId.Value);
 
         if (!string.IsNullOrWhiteSpace(parameters.Text))
-            query = query.Where(pc => pc.Text.Contains(parameters.Text, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(pc => pc.Text.ToLower().Contains(parameters.Text.ToLower()));
 
         query = sortHelper.ApplySort(query, parameters.OrderBy);
 
