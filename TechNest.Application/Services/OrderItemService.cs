@@ -25,7 +25,18 @@ public class OrderItemService(IUnitOfWork unitOfWork, ISortHelper<OrderItem> sor
 
     public async Task<OrderItemDto> CreateAsync(CreateOrderItemDto dto, CancellationToken cancellationToken)
     {
-        var entity = dto.Adapt<OrderItem>();
+        var product = await unitOfWork.Products.GetByIdAsync(dto.ProductId, cancellationToken);
+        if (product is null)
+            throw new KeyNotFoundException("Product not found");
+
+        var entity = new OrderItem
+        {
+            OrderId = dto.OrderId,
+            ProductId = dto.ProductId,
+            Quantity = dto.Quantity,
+            UnitPrice = product.Price 
+        };
+
         await unitOfWork.OrderItems.AddAsync(entity, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -35,16 +46,20 @@ public class OrderItemService(IUnitOfWork unitOfWork, ISortHelper<OrderItem> sor
 
     public async Task<OrderItemDto> UpdateAsync(UpdateOrderItemDto dto, CancellationToken cancellationToken)
     {
-        var item = await unitOfWork.OrderItems.GetByIdAsync(dto.Id, cancellationToken);
+        var item = await unitOfWork.OrderItems.GetByIdWithDetailsAsync(dto.Id, cancellationToken);
         if (item is null) throw new KeyNotFoundException("Order item not found");
 
-        dto.Adapt(item);
+        item.Quantity = dto.Quantity;
+
+        item.UnitPrice = item.Product.Price;
+
         unitOfWork.OrderItems.Update(item);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         var updated = await unitOfWork.OrderItems.GetByIdWithDetailsAsync(dto.Id, cancellationToken);
         return updated!.Adapt<OrderItemDto>();
     }
+
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {

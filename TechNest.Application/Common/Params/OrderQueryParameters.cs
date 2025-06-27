@@ -10,7 +10,7 @@ public class OrderQueryParameters : QueryParameters
     public string? Email { get; set; }
     public string? Phone { get; set; }
     public string? Department { get; set; } 
-    public OrderStatus? Status { get; set; }
+    public string? Status { get; set; }
     public DateTime? CreatedFrom { get; set; }
     public DateTime? CreatedTo { get; set; }
 }

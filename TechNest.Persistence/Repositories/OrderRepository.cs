@@ -4,6 +4,7 @@ using TechNest.Application.Common.Pagination;
 using TechNest.Application.Common.Params;
 using TechNest.Application.Interfaces.Repositories;
 using TechNest.Domain.Entities;
+using TechNest.Domain.Entities.Enums;
 using TechNest.Persistence.Data;
 using TechNest.Persistence.Extensions;
 
@@ -35,8 +36,11 @@ public class OrderRepository(ApplicationDbContext context) : GenericRepository<O
         if (!string.IsNullOrWhiteSpace(parameters.Department))
             query = query.Where(o => o.Department.ToLower().Contains(parameters.Department.ToLower()));
 
-        if (parameters.Status.HasValue)
-            query = query.Where(o => o.Status == parameters.Status.Value);
+        if (!string.IsNullOrWhiteSpace(parameters.Status)
+            && Enum.TryParse<OrderStatus>(parameters.Status, true, out var parsedStatus))
+        {
+            query = query.Where(o => o.Status == parsedStatus);
+        }
 
         if (parameters.CreatedFrom.HasValue)
             query = query.Where(o => o.CreatedAt >= parameters.CreatedFrom.Value);
@@ -48,7 +52,17 @@ public class OrderRepository(ApplicationDbContext context) : GenericRepository<O
 
         return await query
             .Include(o => o.Items)
+            .ThenInclude(i => i.Product)
             .AsNoTracking()
             .ToPagedListAsync(parameters.PageNumber, parameters.PageSize, cancellationToken);
+    }
+    
+    public async Task<Order?> GetByIdWithItemsAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await _dbSet
+            .Include(o => o.Items)
+            .ThenInclude(i => i.Product)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
     }
 }

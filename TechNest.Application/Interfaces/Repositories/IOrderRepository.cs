@@ -8,4 +8,5 @@ namespace TechNest.Application.Interfaces.Repositories;
 public interface IOrderRepository : IGenericRepository<Order>
 {
     Task<PagedList<Order>> GetAllPaginatedAsync(OrderQueryParameters parameters, ISortHelper<Order> sortHelper, CancellationToken cancellationToken = default);
+    Task<Order?> GetByIdWithItemsAsync(Guid id, CancellationToken cancellationToken = default);
 }

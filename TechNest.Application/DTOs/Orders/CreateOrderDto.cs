@@ -10,5 +10,5 @@ public class CreateOrderDto
     public string Phone { get; set; } = null!;
     public string City { get; set; } = null!;
     public string Department { get; set; } = null!;
-    public ICollection<CreateOrderItemDto> Items { get; set; } = new List<CreateOrderItemDto>();
+    public ICollection<CreateOrderOrderItemDto> Items { get; set; } = new List<CreateOrderOrderItemDto>();
 }

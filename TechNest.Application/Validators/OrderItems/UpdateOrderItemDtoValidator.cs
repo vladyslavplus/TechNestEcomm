@@ -9,6 +9,5 @@ public class UpdateOrderItemDtoValidator : AbstractValidator<UpdateOrderItemDto>
     {
         RuleFor(x => x.Id).NotEmpty();
         RuleFor(x => x.Quantity).GreaterThan(0);
-        RuleFor(x => x.UnitPrice).GreaterThanOrEqualTo(0);
     }
 }

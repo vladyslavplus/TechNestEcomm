@@ -12,7 +12,7 @@ public class OrderDto
     public string Phone { get; set; } = null!;
     public string City { get; set; } = null!;
     public string Department { get; set; } = null!;
-    public OrderStatus Status { get; set; }
+    public string Status { get; set; } = null!;
     public DateTime CreatedAt { get; set; }
     public ICollection<OrderItemDto> Items { get; set; } = new List<OrderItemDto>();
 }
